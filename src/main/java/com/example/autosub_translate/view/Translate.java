@@ -1,15 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.example.autosub_translate.view;
 
-import com.example.autosub_translate.controller.TranslateController;
+import java.awt.FileDialog;
 import javax.swing.JOptionPane;
-import javax.swing.JFileChooser;
+import com.example.autosub_translate.controller.LanguageController;
+import com.example.autosub_translate.controller.TranslateController;
+import com.example.autosub_translate.models.Languege;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Desktop;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 /**
  *
@@ -20,9 +26,39 @@ public class Translate extends javax.swing.JFrame {
     /**
      * Creates new form OpenSub
      */
+    private String fileDirectory;
+    private String fileName;
+    private int width, height;
+
     public Translate() {
         initComponents();
         setLocationRelativeTo(null);
+        getContentPane().setBackground(Color.WHITE);
+        setTitle("Auto Translate");
+        setSize(getWidth(), getHeight() - 95);
+
+        width = getWidth();
+        height = getHeight();
+
+        LanguageController controller = new LanguageController(cbLanguegeList);
+        controller.getListLanguage();
+        jPanel1.setLayout(new BorderLayout());
+        jPanel1.add(prcbLoading, BorderLayout.CENTER);
+        prcbLoading.setStringPainted(true);
+
+        txtSuccess.setHorizontalAlignment(JLabel.CENTER);
+        txtSuccess.setVerticalAlignment(JLabel.CENTER);
+
+        btnOpenFileInFolder.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Desktop.getDesktop().open(new File(fileDirectory));
+                } catch (IOException ex) {
+                    Logger.getLogger(Translate.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
 
     /**
@@ -39,13 +75,17 @@ public class Translate extends javax.swing.JFrame {
         txtPath = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        txtLoading = new javax.swing.JLabel();
+        prcbLoading = new javax.swing.JProgressBar();
+        jLabel2 = new javax.swing.JLabel();
+        cbLanguegeList = new javax.swing.JComboBox<>();
+        txtSuccess = new javax.swing.JLabel();
+        btnOpenFileInFolder = new javax.swing.JButton();
 
         setResizable(false);
 
-        jLabel1.setText("Chon duong dan co phu de");
+        jLabel1.setText("Choose file subtitle");
 
-        btnPath.setText("Chon");
+        btnPath.setText("Choose");
         btnPath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPathActionPerformed(evt);
@@ -54,14 +94,16 @@ public class Translate extends javax.swing.JFrame {
 
         txtPath.setEditable(false);
 
-        jButton1.setText("Dich tu dong");
+        jButton1.setText("Auto translate");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        txtLoading.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jPanel1.setPreferredSize(new java.awt.Dimension(158, 33));
+
+        prcbLoading.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -69,16 +111,23 @@ public class Translate extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtLoading, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                .addComponent(prcbLoading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtLoading, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                .addComponent(prcbLoading, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        jLabel2.setText("Choose language");
+
+        txtSuccess.setText("Done translating!");
+        txtSuccess.setPreferredSize(new java.awt.Dimension(125, 22));
+
+        btnOpenFileInFolder.setText("Open file in folder");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -87,35 +136,51 @@ public class Translate extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)
+                        .addGap(17, 17, 17)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
                         .addGap(18, 18, 18)
-                        .addComponent(txtPath)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtPath)
+                            .addComponent(cbLanguegeList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnPath, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(138, 138, 138)
-                                .addComponent(jButton1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 8, Short.MAX_VALUE)))
+                        .addGap(180, 180, 180)
+                        .addComponent(jButton1)
+                        .addGap(0, 180, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(169, 169, 169)
+                .addComponent(btnOpenFileInFolder)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtSuccess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(167, 167, 167))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(btnPath)
-                    .addComponent(txtPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2)
+                    .addComponent(cbLanguegeList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPath, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtSuccess, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnOpenFileInFolder)
                 .addContainerGap())
         );
 
@@ -124,27 +189,36 @@ public class Translate extends javax.swing.JFrame {
 
     private void btnPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPathActionPerformed
         // TODO add your handling code here:
-        JFileChooser fileChooser = new JFileChooser();
-        FileFilter filter = new FileNameExtensionFilter("Sub file (.srt)", new String[]{"srt"});
-        fileChooser.setFileFilter(filter);
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        int result = fileChooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            txtPath.setText(selectedFile.getAbsolutePath());
+        FileDialog fileDialog = new FileDialog(this);
+        fileDialog.setTitle("Choose file video");
+        fileDialog.setDirectory(System.getProperty("user.home"));
+        fileDialog.setVisible(true);
+        fileDirectory = fileDialog.getDirectory();
+        fileName = fileDialog.getFile();
+        if (fileName != null) {
+            String path = fileDirectory + fileName;
+            txtPath.setText(path);
         }
     }//GEN-LAST:event_btnPathActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        if(txtPath.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Vui long chon duong dan file");
-        }else{
-            TranslateController translateController = new TranslateController(txtPath.getText().trim(), txtLoading);
-            translateController.translateAuto();
+        if (txtPath.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "The file path cannot be left blank");
+        } else {
+            Languege languege = (Languege) cbLanguegeList.getSelectedItem();
+
+            int check = JOptionPane.showConfirmDialog(null, "Would you like the displayed translation to include the original language text?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (check != -1) {
+                setSize(width, height + 35);
+            } else {
+                setSize(width, height);
+            }
+            Thread thread = new Thread(new TranslateController(fileName, prcbLoading, languege.getLanguegeCode(), check, fileDirectory, this, width, height));
+            thread.start();
+
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
 
     /**
      * @param args the command line arguments
@@ -197,12 +271,16 @@ public class Translate extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnOpenFileInFolder;
     private javax.swing.JButton btnPath;
+    private javax.swing.JComboBox<Languege> cbLanguegeList;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel txtLoading;
+    private javax.swing.JProgressBar prcbLoading;
     private javax.swing.JTextField txtPath;
+    private javax.swing.JLabel txtSuccess;
     // End of variables declaration//GEN-END:variables
 
 }
